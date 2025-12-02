@@ -1,0 +1,163 @@
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+
+entity dual_prog_prog_counter is
+    port (
+        i_clk   : in  std_logic;
+        i_rst   : in  std_logic;
+
+        i_en0   : in  std_logic;
+        i_dir0  : in  std_logic;
+        i_low0  : in  unsigned(3 downto 0);
+        i_high0 : in  unsigned(3 downto 0);
+        i_load0 : in  std_logic;
+        i_init0 : in  unsigned(3 downto 0);
+
+        i_en1   : in  std_logic;
+        i_dir1  : in  std_logic;
+        i_low1  : in  unsigned(3 downto 0);
+        i_high1 : in  unsigned(3 downto 0);
+        i_load1 : in  std_logic;
+        i_init1 : in  unsigned(3 downto 0);
+
+        o_cnt0  : out unsigned(3 downto 0);
+        o_cnt1  : out unsigned(3 downto 0)
+    );
+end dual_prog_prog_counter;
+
+
+architecture rtl of dual_prog_prog_counter is
+
+    signal r_dir0  : std_logic := '1';
+    signal r_init0 : unsigned(3 downto 0) := (others => '0');
+    signal r_load0 : std_logic := '0';
+    signal r_cnt0  : unsigned(3 downto 0) := (others => '0');
+
+    signal r_dir1  : std_logic := '0';
+    signal r_init1 : unsigned(3 downto 0) := (others => '0');
+    signal r_load1 : std_logic := '0';
+    signal r_cnt1  : unsigned(3 downto 0) := (others => '0');
+
+begin
+
+    p_dir0 : process(i_clk)
+    begin
+        if rising_edge(i_clk) then
+            if i_rst = '1' then
+                r_dir0 <= '1';
+            else
+                r_dir0 <= i_dir0;
+            end if;
+        end if;
+    end process;
+
+    p_init0 : process(i_clk)
+    begin
+        if rising_edge(i_clk) then
+            if i_rst = '1' then
+                r_init0 <= (others => '0');
+            else
+                r_init0 <= i_init0;
+            end if;
+        end if;
+    end process;
+
+    p_load0 : process(i_clk)
+    begin
+        if rising_edge(i_clk) then
+            if i_rst = '1' then
+                r_load0 <= '0';
+            else
+                r_load0 <= i_load0;
+            end if;
+        end if;
+    end process;
+
+    p_cnt0 : process(i_clk)
+    begin
+        if rising_edge(i_clk) then
+            if i_rst = '1' then
+                r_cnt0 <= (others => '0');
+            elsif r_load0 = '1' then
+                r_cnt0 <= r_init0;
+            elsif i_en0 = '1' then
+                if r_dir0 = '1' then   -- up
+                    if r_cnt0 < i_high0 then
+                        r_cnt0 <= r_cnt0 + 1;
+                    else
+                        r_cnt0 <= i_low0;
+                    end if;
+                else                   -- down
+                    if r_cnt0 > i_low0 then
+                        r_cnt0 <= r_cnt0 - 1;
+                    else
+                        r_cnt0 <= i_high0;
+                    end if;
+                end if;
+            end if;
+        end if;
+    end process;
+
+    p_dir1 : process(i_clk)
+    begin
+        if rising_edge(i_clk) then
+            if i_rst = '1' then
+                r_dir1 <= '0';
+            else
+                r_dir1 <= i_dir1;
+            end if;
+        end if;
+    end process;
+
+    p_init1 : process(i_clk)
+    begin
+        if rising_edge(i_clk) then
+            if i_rst = '1' then
+                r_init1 <= (others => '0');
+            else
+                r_init1 <= i_init1;
+            end if;
+        end if;
+    end process;
+
+    p_load1 : process(i_clk)
+    begin
+        if rising_edge(i_clk) then
+            if i_rst = '1' then
+                r_load1 <= '0';
+            else
+                r_load1 <= i_load1;
+            end if;
+        end if;
+    end process;
+
+    p_cnt1 : process(i_clk)
+    begin
+        if rising_edge(i_clk) then
+            if i_rst = '1' then
+                r_cnt1 <= (others => '0');
+            elsif r_load1 = '1' then
+                r_cnt1 <= r_init1;
+            elsif i_en1 = '1' then
+                if r_dir1 = '1' then
+                    if r_cnt1 < i_high1 then
+                        r_cnt1 <= r_cnt1 + 1;
+                    else
+                        r_cnt1 <= i_low1;
+                    end if;
+                else
+                    if r_cnt1 > i_low1 then
+                        r_cnt1 <= r_cnt1 - 1;
+                    else
+                        r_cnt1 <= i_high1;
+                    end if;
+                end if;
+            end if;
+        end if;
+    end process;
+
+    o_cnt0 <= r_cnt0;
+    o_cnt1 <= r_cnt1;
+
+end architecture;
