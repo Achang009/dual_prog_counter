@@ -2,7 +2,7 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;
 
-entity updown_counter_dynamic is
+entity updown_counter is
     Generic (
         g_DIV_RATIO : integer := 50000000 
     );
@@ -14,9 +14,9 @@ entity updown_counter_dynamic is
         o_countup   : out STD_LOGIC_VECTOR(3 downto 0);
         o_countdown : out STD_LOGIC_VECTOR(3 downto 0)
     );
-end updown_counter_dynamic;
+end updown_counter;
 
-architecture Behavioral of updown_counter_dynamic is
+architecture Behavioral of updown_counter is
     
     signal cntup     : unsigned(3 downto 0) := (others => '0');
     signal cntdown   : unsigned(3 downto 0) := (others => '0');
@@ -110,3 +110,4 @@ set_property IOSTANDARD LVCMOS33 [get_ports {o_countdown[3]}]
 set_property IOSTANDARD LVCMOS33 [get_ports {o_countdown[2]}]
 set_property IOSTANDARD LVCMOS33 [get_ports {o_countdown[1]}]
 set_property IOSTANDARD LVCMOS33 [get_ports {o_countdown[0]}]
+
