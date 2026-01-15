@@ -24,7 +24,7 @@ architecture Behavioral of updown_counter is
     signal w_tick    : std_logic := '0';
 
 begin
-    freq: process(i_clk, i_reset)
+    frequency_divider: process(i_clk, i_reset)
     begin
         if i_reset = '1' then
             r_div_cnt <= 0;
@@ -38,7 +38,7 @@ begin
                 w_tick    <= '0';
             end if;
         end if;
-    end process freq;
+    end process frequency_divider;
 
     up_counter: process(i_clk, i_reset)
     begin
@@ -110,5 +110,6 @@ set_property IOSTANDARD LVCMOS33 [get_ports {o_countdown[3]}]
 set_property IOSTANDARD LVCMOS33 [get_ports {o_countdown[2]}]
 set_property IOSTANDARD LVCMOS33 [get_ports {o_countdown[1]}]
 set_property IOSTANDARD LVCMOS33 [get_ports {o_countdown[0]}]
+
 
 
