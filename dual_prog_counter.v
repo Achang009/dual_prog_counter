@@ -111,3 +111,4 @@ set_property IOSTANDARD LVCMOS33 [get_ports {o_countdown[2]}]
 set_property IOSTANDARD LVCMOS33 [get_ports {o_countdown[1]}]
 set_property IOSTANDARD LVCMOS33 [get_ports {o_countdown[0]}]
 
+
