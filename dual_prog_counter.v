@@ -21,54 +21,51 @@ architecture Behavioral of updown_counter is
     signal cntup     : unsigned(3 downto 0) := (others => '0');
     signal cntdown   : unsigned(3 downto 0) := (others => '0');
     signal r_div_cnt : integer range 0 to g_DIV_RATIO - 1 := 0;
-    signal w_tick    : std_logic := '0';
+    signal f_clk     : std_logic := '0';
 
 begin
+
     frequency_divider: process(i_clk, i_reset)
     begin
         if i_reset = '1' then
             r_div_cnt <= 0;
-            w_tick    <= '0';
+            f_clk     <= '0';
         elsif rising_edge(i_clk) then
             if r_div_cnt = g_DIV_RATIO - 1 then
                 r_div_cnt <= 0;
-                w_tick    <= '1';
+                f_clk     <= not f_clk;
             else
                 r_div_cnt <= r_div_cnt + 1;
-                w_tick    <= '0';
             end if;
         end if;
     end process frequency_divider;
 
-    up_counter: process(i_clk, i_reset)
+    up_counter: process(f_clk, i_reset)
     begin
         if i_reset = '1' then
             cntup <= unsigned(i_min);
-        elsif rising_edge(i_clk) then
-            if w_tick = '1' then
-                if cntup >= unsigned(i_max) then
-                    cntup <= unsigned(i_min);
-                else
-                    cntup <= cntup + 1;
-                end if;
+        elsif rising_edge(f_clk) then
+            if cntup >= unsigned(i_max) then
+                cntup <= unsigned(i_min);
+            else
+                cntup <= cntup + 1;
             end if;
         end if;
     end process up_counter;
 
-    down_counter: process(i_clk, i_reset)
+    down_counter: process(f_clk, i_reset)
     begin
         if i_reset = '1' then
             cntdown <= unsigned(i_max);
-        elsif rising_edge(i_clk) then
-            if w_tick = '1' then
-                if cntdown <= unsigned(i_min) then
-                    cntdown <= unsigned(i_max);
-                else
-                    cntdown <= cntdown - 1;
-                end if;
+        elsif rising_edge(f_clk) then
+            if cntdown <= unsigned(i_min) then
+                cntdown <= unsigned(i_max);
+            else
+                cntdown <= cntdown - 1;
             end if;
         end if;
     end process down_counter;
+
     o_countup   <= std_logic_vector(cntup);
     o_countdown <= std_logic_vector(cntdown);
 end Behavioral;
@@ -110,6 +107,7 @@ set_property IOSTANDARD LVCMOS33 [get_ports {o_countdown[3]}]
 set_property IOSTANDARD LVCMOS33 [get_ports {o_countdown[2]}]
 set_property IOSTANDARD LVCMOS33 [get_ports {o_countdown[1]}]
 set_property IOSTANDARD LVCMOS33 [get_ports {o_countdown[0]}]
+
 
 
 
