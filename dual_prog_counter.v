@@ -1,6 +1,6 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
-use IEEE.STD_LOGIC_ARITH.ALL;    
+use IEEE.STD_LOGIC_ARITH.ALL;
 use IEEE.STD_LOGIC_UNSIGNED.ALL;
 
 entity updown_counter is
@@ -18,9 +18,10 @@ entity updown_counter is
 end updown_counter;
 
 architecture Behavioral of updown_counter is
+
+    signal cntup     : STD_LOGIC_VECTOR(3 downto 0) := (others => '0');
+    signal cntdown   : STD_LOGIC_VECTOR(3 downto 0) := (others => '0');
     
-    signal cntup     : unsigned(3 downto 0) := (others => '0');
-    signal cntdown   : unsigned(3 downto 0) := (others => '0');
     signal r_div_cnt : integer range 0 to g_DIV_RATIO - 1 := 0;
     signal f_clk     : std_logic := '0';
 
@@ -44,7 +45,7 @@ begin
     up_counter: process(f_clk, i_reset)
     begin
         if i_reset = '1' then
-            cntup <= i_min;
+            cntup <= i_min; 
         elsif rising_edge(f_clk) then
             if cntup >= i_max then
                 cntup <= i_min;
@@ -60,15 +61,14 @@ begin
             cntdown <= i_max;
         elsif rising_edge(f_clk) then
             if cntdown <= i_min then
-                cntdown <=(i_max;
+                cntdown <= i_max;
             else
                 cntdown <= cntdown - 1;
             end if;
         end if;
     end process down_counter;
 
-    o_countup   <= std_logic_vector(cntup);
-    o_countdown <= std_logic_vector(cntdown);
+    o_countup   <= cntup;
+    o_countdown <= cntdown;
+    
 end Behavioral;
-
-
