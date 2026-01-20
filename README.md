@@ -10,3 +10,7 @@
 ![圖片說明文字](6.png)<br>
 # 波形模擬圖+解釋<br>
 ![圖片說明文字](5.png)
+
+
+https://github.com/user-attachments/assets/4faeea5d-114d-4823-b081-0252aa6dbcf1
+
