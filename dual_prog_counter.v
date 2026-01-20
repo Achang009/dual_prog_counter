@@ -1,6 +1,7 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
-use IEEE.NUMERIC_STD.ALL;
+use IEEE.STD_LOGIC_ARITH.ALL;    
+use IEEE.STD_LOGIC_UNSIGNED.ALL;
 
 entity updown_counter is
     Generic (
@@ -56,10 +57,10 @@ begin
     down_counter: process(f_clk, i_reset)
     begin
         if i_reset = '1' then
-            cntdown <= unsigned(i_max);
+            cntdown <= i_max;
         elsif rising_edge(f_clk) then
-            if cntdown <= unsigned(i_min) then
-                cntdown <= unsigned(i_max);
+            if cntdown <= i_min then
+                cntdown <=(i_max;
             else
                 cntdown <= cntdown - 1;
             end if;
@@ -69,4 +70,5 @@ begin
     o_countup   <= std_logic_vector(cntup);
     o_countdown <= std_logic_vector(cntdown);
 end Behavioral;
+
 
