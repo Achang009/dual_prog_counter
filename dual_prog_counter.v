@@ -4,9 +4,6 @@ use IEEE.STD_LOGIC_ARITH.ALL;
 use IEEE.STD_LOGIC_UNSIGNED.ALL;
 
 entity updown_counter is
-    Generic (
-        g_DIV_RATIO : integer := 50000000 
-    );
     Port (
         i_clk       : in  STD_LOGIC;
         i_reset     : in  STD_LOGIC;
@@ -21,8 +18,8 @@ architecture Behavioral of updown_counter is
 
     signal cntup     : STD_LOGIC_VECTOR(3 downto 0) := (others => '0');
     signal cntdown   : STD_LOGIC_VECTOR(3 downto 0) := (others => '0');
-    
-    signal r_div_cnt : integer range 0 to g_DIV_RATIO - 1 := 0;
+
+    signal bin_cnt   : STD_LOGIC_VECTOR(25 downto 0) := (others => '0'); 
     signal f_clk     : std_logic := '0';
 
 begin
@@ -30,18 +27,12 @@ begin
     frequency_divider: process(i_clk, i_reset)
     begin
         if i_reset = '1' then
-            r_div_cnt <= 0;
-            f_clk     <= '0';
+            bin_cnt <= (others => '0');
         elsif rising_edge(i_clk) then
-            if r_div_cnt = g_DIV_RATIO - 1 then
-                r_div_cnt <= 0;
-                f_clk     <= not f_clk;
-            else
-                r_div_cnt <= r_div_cnt + 1;
-            end if;
+            bin_cnt <= bin_cnt + 1;  
         end if;
     end process frequency_divider;
-
+    f_clk <= bin_cnt(25); 
     up_counter: process(f_clk, i_reset)
     begin
         if i_reset = '1' then
@@ -54,7 +45,6 @@ begin
             end if;
         end if;
     end process up_counter;
-
     down_counter: process(f_clk, i_reset)
     begin
         if i_reset = '1' then
