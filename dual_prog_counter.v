@@ -43,10 +43,10 @@ begin
     up_counter: process(f_clk, i_reset)
     begin
         if i_reset = '1' then
-            cntup <= unsigned(i_min);
+            cntup <= i_min;
         elsif rising_edge(f_clk) then
-            if cntup >= unsigned(i_max) then
-                cntup <= unsigned(i_min);
+            if cntup >= i_max then
+                cntup <= i_min;
             else
                 cntup <= cntup + 1;
             end if;
@@ -69,3 +69,4 @@ begin
     o_countup   <= std_logic_vector(cntup);
     o_countdown <= std_logic_vector(cntdown);
 end Behavioral;
+
